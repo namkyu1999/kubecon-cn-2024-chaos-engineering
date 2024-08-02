@@ -1,0 +1,44 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: delivery-app
+  namespace: dapr
+  labels:
+    app: delivery-app
+spec:
+  selector:
+    app: delivery-app
+  ports:
+    - protocol: TCP
+      port: 6005
+      targetPort: 6005
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delivery-app
+  namespace: dapr
+  labels:
+    app: delivery-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: delivery-app
+  template:
+    metadata:
+      labels:
+        app: delivery-app
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "deliveryapp"
+        dapr.io/app-port: "6005"
+        dapr.io/enable-api-logging: "true"
+    spec:
+      containers:
+        - name: delivery-app
+          image: lak9348/dapr-delivery-v2:v0.0.8
+          ports:
+            - containerPort: 6005
+          imagePullPolicy: Always

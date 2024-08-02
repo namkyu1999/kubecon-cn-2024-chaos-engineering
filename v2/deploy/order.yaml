@@ -1,0 +1,45 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: order-app
+  namespace: dapr
+  labels:
+    app: order-app
+spec:
+  selector:
+    app: order-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-app
+  namespace: dapr
+  labels:
+    app: order-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-app
+  template:
+    metadata:
+      labels:
+        app: order-app
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "orderapp"
+        dapr.io/app-port: "8080"
+        dapr.io/enable-api-logging: "true"
+    spec:
+      containers:
+        - name: order-app
+          image: lak9348/dapr-order-v2:v0.0.8
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Always

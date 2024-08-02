@@ -1,0 +1,1 @@
+Error starting Dapr and app ("subscriber"): fork/exec /Users/namkyu/.dapr/bin/daprd: no such file or directory

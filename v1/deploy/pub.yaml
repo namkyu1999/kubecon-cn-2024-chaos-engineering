@@ -1,0 +1,45 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: pub-app
+  namespace: dapr
+  labels:
+    app: pub-app
+spec:
+  selector:
+    app: pub-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pub-app
+  namespace: dapr
+  labels:
+    app: pub-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pub-app
+  template:
+    metadata:
+      labels:
+        app: pub-app
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "pubapp"
+        dapr.io/app-port: "8080"
+        dapr.io/enable-api-logging: "true"
+    spec:
+      containers:
+        - name: pub-app
+          image: lak9348/dapr-pub:v0.0.1
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Always

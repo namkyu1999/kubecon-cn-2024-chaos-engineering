@@ -1,0 +1,27 @@
+auth:
+  enabled: true
+  rootPassword: "1234"
+  username: "admin"
+  password: "1234"
+  database: "daprStore"
+architecture: standalone
+useStatefulSet: true
+persistence:
+  enabled: true
+volumePermissions:
+  enabled: true
+metrics:
+  enabled: false
+  prometheusRule:
+    enabled: false
+service:
+  type: NodePort
+  port: 27017
+  portName: mongodb
+# bitnami/mongodb is not yet supported on ARM.
+# Using unofficial tools to build bitnami/mongodb (arm64 support)
+# more info: https://github.com/ZCube/bitnami-compat
+image:
+  registry: ghcr.io/zcube
+  repository: bitnami-compat/mongodb
+  tag: 6.0.5
