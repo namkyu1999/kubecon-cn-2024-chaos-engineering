@@ -12,10 +12,14 @@ dapr init --kubernetes --wait -n dapr
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 helm install redis bitnami/redis --set image.tag=6.2 --set architecture=standalone -n dapr
-kubectl apply -f ./v2/deploy/pubsub.yaml
 kubectl apply -f ./v2/deploy/redis-state.yaml
 
-## install mongodb for state store
+## install rabbitmq for pubsub
+helm install rb bitnami/rabbitmq-cluster-operator -n dapr
+kubectl apply -f ./v2/deploy/rabbitmq.yaml
+kubectl apply -f ./v2/deploy/pubsub.yaml
+
+## install mongodb
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install mongo bitnami/mongodb --values ./v2/deploy/mongo-values.yaml -n dapr --version 12.1.31
 

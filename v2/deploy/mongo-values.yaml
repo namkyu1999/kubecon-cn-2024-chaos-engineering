@@ -1,9 +1,6 @@
 auth:
   enabled: true
   rootPassword: "1234"
-  username: "admin"
-  password: "1234"
-  database: "daprStore"
 architecture: standalone
 useStatefulSet: true
 persistence:
