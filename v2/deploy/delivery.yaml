@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: delivery-app
-  namespace: dapr
+  namespace: v2
   labels:
     app: delivery-app
 spec:
@@ -18,7 +18,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: delivery-app
-  namespace: dapr
+  namespace: v2
   labels:
     app: delivery-app
 spec:
@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
         - name: delivery-app
-          image: lak9348/dapr-delivery-v2:v0.0.8
+          image: lak9348/dapr-delivery-v2:v0.1.1
           ports:
             - containerPort: 6005
           imagePullPolicy: Always

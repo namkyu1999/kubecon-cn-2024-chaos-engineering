@@ -2,13 +2,13 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: redis-outbox
-  namespace: dapr
+  namespace: v2
 spec:
   type: state.redis
   version: v1
   metadata:
     - name: redisHost
-      value: redis-master.dapr.svc.cluster.local:6379
+      value: redis-master.v2.svc.cluster.local:6379
     - name: redisPassword
       secretKeyRef:
         name: redis

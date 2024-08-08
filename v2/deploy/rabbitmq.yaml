@@ -10,13 +10,14 @@ data:
 kind: Secret
 metadata:
   name: my-secret
+  namespace: v2
 type: Opaque
 ---
 apiVersion: rabbitmq.com/v1beta1
 kind: RabbitmqCluster
 metadata:
   name: pubsub
-  namespace: dapr
+  namespace: v2
 spec:
   service:
     type: NodePort
