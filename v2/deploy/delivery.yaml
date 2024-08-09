@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
         - name: delivery-app
-          image: lak9348/dapr-delivery-v2:v0.1.1
+          image: lak9348/dapr-delivery-v2:v0.1.7
           ports:
             - containerPort: 6005
           imagePullPolicy: Always

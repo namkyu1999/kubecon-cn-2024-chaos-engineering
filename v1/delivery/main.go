@@ -19,14 +19,14 @@ import (
 
 var sub = &common.Subscription{
 	PubsubName: "pubsub",
-	Topic:      "orders",
-	Route:      "/orders",
+	Topic:      "orders1",
+	Route:      "/orders1",
 }
 
 const AppPort = "6005"
 const MongoDBURI = "mongodb://mongo-mongodb.common.svc.cluster.local:27017/delivery"
 const MongoDBDatabase = "delivery"
-const MongoDBCollection = "delivery2"
+const MongoDBCollection = "delivery1"
 
 func main() {
 	// Mongo client

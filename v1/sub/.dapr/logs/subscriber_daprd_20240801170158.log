@@ -1,3 +1,0 @@
-Starting Dapr with id subscriber. HTTP Port: 60510. gRPC Port: 60511
-Error starting daprd process: fork/exec /Users/namkyu/.dapr/bin/daprd: no such file or directory
-Error starting Dapr and app ("subscriber"): fork/exec /Users/namkyu/.dapr/bin/daprd: no such file or directory

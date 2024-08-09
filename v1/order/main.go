@@ -8,16 +8,16 @@ import (
 
 	dapr "github.com/dapr/go-sdk/client"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const StateStoreName = "redis-outbox"
 const MongoDBURI = "mongodb://mongo-mongodb.common.svc.cluster.local:27017/delivery"
 const MongoDBDatabase = "delivery"
-const MongoDBCollection = "delivery2"
+const MongoDBCollection = "delivery1"
+const PubSubName = "pubsub"
+const TopicName = "orders1"
 
 type Delivery struct {
 	OrderID     string `bson:"orderID"`
@@ -60,10 +60,6 @@ func main() {
 			panic(err)
 		}
 
-		messageID := uuid.NewString()
-
-		ops := make([]*dapr.StateOperation, 0)
-
 		newData := Delivery{
 			OrderID:     req.OrderID,
 			IsDelivered: false,
@@ -76,21 +72,15 @@ func main() {
 			})
 		}
 
-		operation := &dapr.StateOperation{
-			Type: dapr.StateOperationTypeUpsert,
-			Item: &dapr.SetStateItem{
-				Key:   messageID,
-				Value: []byte(req.OrderID),
-			},
+		if err := client.PublishEvent(c.Request.Context(), PubSubName, TopicName, []byte(req.OrderID)); err != nil {
+			c.JSON(500, gin.H{
+				"message": "Error publishing event",
+			})
+		} else {
+			c.JSON(200, gin.H{
+				"message": "Order completed!",
+			})
 		}
-
-		ops = append(ops, operation)
-		meta := map[string]string{}
-		err = client.ExecuteStateTransaction(c.Request.Context(), StateStoreName, meta, ops)
-
-		c.JSON(200, gin.H{
-			"message": "Order completed!",
-		})
 	})
 
 	if err = r.Run(); err != nil {

@@ -7,16 +7,16 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /pub
+RUN CGO_ENABLED=0 GOOS=linux go build -o /delivery
 
 FROM gcr.io/distroless/base-debian11 AS release-stage
 
 WORKDIR /
 
-COPY --from=build-stage /v1/pub /pub
+COPY --from=build-stage /delivery /delivery
 
-EXPOSE 8080
+EXPOSE 6005
 
 USER nonroot:nonroot
 
-ENTRYPOINT ["/pub"]
+ENTRYPOINT ["/delivery"]

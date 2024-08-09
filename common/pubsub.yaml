@@ -2,13 +2,13 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: pubsub
-  namespace: v2
+  namespace: common
 spec:
   type: pubsub.rabbitmq
   version: v1
   metadata:
     - name: host
-      value: "amqp://default_user_hmGZFhdewq65P4dIdx7:qc98n4iGD7MYXMBVFcIO2mtB5voDuV_n@pubsub.v2.svc.cluster.local:5672"
+      value: "amqp://default_user_hmGZFhdewq65P4dIdx7:qc98n4iGD7MYXMBVFcIO2mtB5voDuV_n@pubsub.common.svc.cluster.local:5672"
     - name: ttlInSeconds
       value: 60
     - name: heartBeat
