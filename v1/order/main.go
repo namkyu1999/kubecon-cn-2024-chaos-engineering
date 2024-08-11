@@ -13,9 +13,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const MongoDBURI = "mongodb://mongo-mongodb.common.svc.cluster.local:27017/delivery"
+const MongoDBURI = "mongodb://my-release-mongodb-0.my-release-mongodb-headless.litmus:27017,my-release-mongodb-1.my-release-mongodb-headless.litmus:27017,my-release-mongodb-2.my-release-mongodb-headless.litmus:27017/admin"
 const MongoDBDatabase = "delivery"
 const MongoDBCollection = "delivery1"
+const DBUser = "root"
+const DBPassword = "1234"
 const PubSubName = "pubsub"
 const TopicName = "orders1"
 
@@ -89,8 +91,12 @@ func main() {
 }
 
 func MongoConnection() (*mongo.Client, error) {
+	credential := options.Credential{
+		Username: DBUser,
+		Password: DBPassword,
+	}
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(MongoDBURI))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(MongoDBURI).SetAuth(credential))
 	if err != nil {
 		return nil, err
 	}

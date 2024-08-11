@@ -1,0 +1,25 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pubsub
+  namespace: v1
+spec:
+  type: pubsub.rabbitmq
+  version: v1
+  metadata:
+    - name: host
+      value: "amqp://default_user_hmGZFhdewq65P4dIdx7:qc98n4iGD7MYXMBVFcIO2mtB5voDuV_n@pubsub.v2.svc.cluster.local:5672"
+    - name: ttlInSeconds
+      value: 60
+    - name: heartBeat
+      value: 10s
+    - name: deletedWhenUnused
+      value: false
+    - name: durable
+      value: true
+    - name: deliveryMode
+      value: 2
+    - name: requeueInFailure
+      value: true
+    - name: publisherConfirm
+      value: true

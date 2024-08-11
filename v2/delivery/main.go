@@ -24,9 +24,11 @@ var sub = &common.Subscription{
 }
 
 const AppPort = "6005"
-const MongoDBURI = "mongodb://mongo-mongodb.common.svc.cluster.local:27017/delivery"
+const MongoDBURI = "mongodb://my-release-mongodb-0.my-release-mongodb-headless.litmus:27017,my-release-mongodb-1.my-release-mongodb-headless.litmus:27017,my-release-mongodb-2.my-release-mongodb-headless.litmus:27017/admin"
 const MongoDBDatabase = "delivery"
 const MongoDBCollection = "delivery2"
+const DBUser = "root"
+const DBPassword = "1234"
 
 func main() {
 	// Mongo client
@@ -93,8 +95,13 @@ func main() {
 }
 
 func MongoConnection() (*mongo.Client, error) {
+	credential := options.Credential{
+		Username: DBUser,
+		Password: DBPassword,
+	}
+
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(MongoDBURI))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(MongoDBURI).SetAuth(credential))
 	if err != nil {
 		return nil, err
 	}

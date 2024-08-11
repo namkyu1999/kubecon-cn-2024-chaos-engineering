@@ -1,13 +1,13 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: delivery-app
+  name: delivery-app-v1
   namespace: v1
   labels:
-    app: delivery-app
+    app: delivery-app-v1
 spec:
   selector:
-    app: delivery-app
+    app: delivery-app-v1
   ports:
     - protocol: TCP
       port: 6005
@@ -17,28 +17,28 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: delivery-app1
+  name: delivery-app-v1
   namespace: v1
   labels:
-    app: delivery-app1
+    app: delivery-app-v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: delivery-app1
+      app: delivery-app-v1
   template:
     metadata:
       labels:
-        app: delivery-app1
+        app: delivery-app-v1
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "deliveryapp1"
+        dapr.io/app-id: "deliveryappv1"
         dapr.io/app-port: "6005"
         dapr.io/enable-api-logging: "true"
     spec:
       containers:
-        - name: delivery-app1
-          image: lak9348/dapr-delivery-v1:v0.1.0
+        - name: delivery-app-v1
+          image: lak9348/dapr-delivery-v1:v0.1.1
           ports:
             - containerPort: 6005
           imagePullPolicy: Always

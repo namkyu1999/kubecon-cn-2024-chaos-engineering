@@ -10,15 +10,23 @@ data:
 kind: Secret
 metadata:
   name: my-secret
-  namespace: common
+  namespace: v1
 type: Opaque
 ---
 apiVersion: rabbitmq.com/v1beta1
 kind: RabbitmqCluster
 metadata:
   name: pubsub
-  namespace: common
+  namespace: v1
 spec:
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+  persistence:
+    storageClassName: standard
+    storage: 1Gi
   service:
     type: NodePort
   replicas: 1

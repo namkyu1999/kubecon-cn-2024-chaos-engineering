@@ -1,13 +1,13 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: order-app1
+  name: order-app-v1
   namespace: v1
   labels:
-    app: order-app
+    app: order-app-v1
 spec:
   selector:
-    app: order-app1
+    app: order-app-v1
   ports:
     - protocol: TCP
       port: 8080
@@ -18,28 +18,28 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: order-app1
+  name: order-app-v1
   namespace: v1
   labels:
-    app: order-app1
+    app: order-app-v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: order-app1
+      app: order-app-v1
   template:
     metadata:
       labels:
-        app: order-app1
+        app: order-app-v1
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "orderapp1"
+        dapr.io/app-id: "orderappv1"
         dapr.io/app-port: "8080"
         dapr.io/enable-api-logging: "true"
     spec:
       containers:
-        - name: order-app
-          image: lak9348/dapr-order-v1:v0.1.0
+        - name: order-app-v1
+          image: lak9348/dapr-order-v1:v0.1.1
           ports:
             - containerPort: 8080
           imagePullPolicy: Always

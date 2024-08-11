@@ -1,0 +1,53 @@
+apiVersion: v1
+data:
+  default_user.conf: ZGVmYXVsdF91c2VyID0gZGVmYXVsdF91c2VyX2htR1pGaGRld3E2NVA0ZElkeDcKZGVmYXVsdF9wYXNzID0gcWM5OG40aUdEN01ZWE1CVkZjSU8ybXRCNXZvRHVWX24K
+  host: dmF1bHQtZGVmYXVsdC11c2VyLmRlZmF1bHQuc3Zj
+  password: cWM5OG40aUdEN01ZWE1CVkZjSU8ybXRCNXZvRHVWX24=
+  port: NTY3Mg==
+  provider: cmFiYml0bXE=
+  type: cmFiYml0bXE=
+  username: ZGVmYXVsdF91c2VyX2htR1pGaGRld3E2NVA0ZElkeDc=
+kind: Secret
+metadata:
+  name: my-secret
+  namespace: v2
+type: Opaque
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: pubsub
+  namespace: v2
+spec:
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+  persistence:
+    storageClassName: standard
+    storage: 1Gi
+  service:
+    type: NodePort
+  replicas: 3
+  secretBackend:
+    externalSecret:
+      name: "my-secret"
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: Policy
+metadata:
+  name: ha-policy
+  namespace: v2
+spec:
+  name: transient # name of the policy
+  vhost: "/" # default to '/' if not provided
+  pattern: "" # regex used to match queues and exchanges
+  applyTo: "all" # set to 'queues', 'exchanges', or 'all'
+  definition:
+    ha-mode:
+      all
+    ha-sync-mode:
+      automatic
+  rabbitmqClusterReference:
+    name: pubsub #name of the rabbitmqcluster

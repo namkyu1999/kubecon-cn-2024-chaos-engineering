@@ -15,6 +15,20 @@
 
 ## Setup
 
+### Pre-requisite
+
+```shell
+## start minikube
+minikube start --memory 8192 --cpus 4 
+
+## init dapr in k8s
+kubectl create namespace common
+dapr init --kubernetes --wait -n common
+
+## install rabbitmq operator for pubsub
+helm install rb bitnami/rabbitmq-cluster-operator -n common 
+```
+
 ### LitmusChaos
 
 ```shell
@@ -25,28 +39,18 @@ helm install my-release bitnami/mongodb --values ./litmus/mongodb-values.yaml -n
 ## install litmus v3.8.0
 kubectl apply -f https://raw.githubusercontent.com/litmuschaos/litmus/master/mkdocs/docs/3.8.0/litmus-cluster-scope-3.8.0.yaml
 
-kubectl create secret generic k6-script \
-    --from-file=./litmus/script.js -n litmus
-```
-
-### Common
-```shell
-kubectl create namespace common
-dapr init --kubernetes --wait -n common
-
-## install mongodb
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install mongo bitnami/mongodb --values ./common/mongo-values.yaml -n common --version 12.1.31
-
-## install rabbitmq for pubsub
-helm install rb bitnami/rabbitmq-cluster-operator -n common
-kubectl apply -f ./common/rabbitmq.yaml
-kubectl apply -f ./v2/deploy/pubsub.yaml
+kubectl create secret generic k6-script-v1 \
+    --from-file=./litmus/script-v1.js -n litmus
+    
+kubectl create secret generic k6-script-v2 \
+    --from-file=./litmus/script-v2.js -n litmus
 ```
 
 ### V1
 ```shell
 kubectl create namespace v1
+kubectl apply -f ./v1/deploy/rabbitmq.yaml
+kubectl apply -f ./v1/deploy/pubsub.yaml
 kubectl apply -f ./v1/deploy/delivery.yaml
 kubectl apply -f ./v1/deploy/order.yaml
 ```
@@ -64,10 +68,19 @@ helm repo update
 helm install redis bitnami/redis --set image.tag=6.2 --set architecture=standalone -n v2
 kubectl apply -f ./v2/deploy/redis-state.yaml
 
+## install rabbitmq for pubsub
+kubectl apply -f ./common/rabbitmq.yaml
+kubectl apply -f ./v2/deploy/pubsub.yaml
+
 ## install applications
 kubectl apply -f ./v2/deploy/delivery.yaml
 kubectl apply -f ./v2/deploy/order.yaml
 ```
 
 # Reference
-- [Dapr tutorial - hello-kubernetes](https://github.com/dapr/quickstarts/tree/master/tutorials/hello-kubernetes)
+- [Dapr - hello-kubernetes](https://github.com/dapr/quickstarts/tree/master/tutorials/hello-kubernetes)
+- [Dapr - how to use outbox](https://docs.dapr.io/developing-applications/building-blocks/state-management/howto-outbox/)
+- [Dapr - rabbitmq](https://docs.dapr.io/reference/components-reference/supported-pubsub/setup-rabbitmq/)
+- [RabbitMQ's persistence](https://www.rabbitmq.com/kubernetes/operator/using-operator#persistence)
+- [RabbitMQ HA mode](https://www.infracloud.io/blogs/setup-rabbitmq-ha-mode-kubernetes-operator/)
+- [MongoDB cli auth](https://medium.com/@yasiru.13/mongodb-setting-up-an-admin-and-login-as-admin-856ea6856faf)
