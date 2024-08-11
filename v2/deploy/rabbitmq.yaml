@@ -21,9 +21,9 @@ metadata:
 spec:
   resources:
     requests:
-      memory: 512Mi
+      memory: 1Gi
     limits:
-      memory: 512Mi
+      memory: 1Gi
   persistence:
     storageClassName: standard
     storage: 1Gi

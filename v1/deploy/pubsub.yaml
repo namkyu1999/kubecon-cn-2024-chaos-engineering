@@ -15,11 +15,3 @@ spec:
       value: 10s
     - name: deletedWhenUnused
       value: false
-    - name: durable
-      value: true
-    - name: deliveryMode
-      value: 2
-    - name: requeueInFailure
-      value: true
-    - name: publisherConfirm
-      value: true
