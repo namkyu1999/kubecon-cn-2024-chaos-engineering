@@ -35,7 +35,8 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm install dapr-prom prometheus-community/prometheus --values ./common/prometheus-values.yaml -n default
 
 ## install Grafana
-## username: admin, password: admin
+#### username: admin, password: admin
+#### import dashboard: ./common/grafana-*.json
 helm repo add grafana https://grafana.github.io/helm-charts
 kubectl --namespace default create secret generic grafana-password \
    --from-literal=admin-user=admin --from-literal=admin-password=admin
