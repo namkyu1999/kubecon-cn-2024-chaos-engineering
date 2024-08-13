@@ -1,6 +1,9 @@
 # KubeCon China 2024 Chaos Engineering
 
 ## Introduction
+- Session Info: [What if Your System Experiences an Outage? Let's Build a Resilient Systems with Chaos Engineering](https://sched.co/1eYaZ)
+- Recording: TBD
+- Slide: TBD
 
 ## Architecture
 
@@ -32,6 +35,7 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm install dapr-prom prometheus-community/prometheus --values ./common/prometheus-values.yaml -n default
 
 ## install Grafana
+## username: admin, password: admin
 helm repo add grafana https://grafana.github.io/helm-charts
 kubectl --namespace default create secret generic grafana-password \
    --from-literal=admin-user=admin --from-literal=admin-password=admin
@@ -80,7 +84,7 @@ helm install redis bitnami/redis --set image.tag=6.2 --set architecture=standalo
 kubectl apply -f ./v2/deploy/redis-state.yaml
 
 ## install rabbitmq for pubsub
-kubectl apply -f ./common/rabbitmq.yaml
+kubectl apply -f ./v2/deploy/rabbitmq.yaml
 kubectl apply -f ./v2/deploy/pubsub.yaml
 
 ## install applications
