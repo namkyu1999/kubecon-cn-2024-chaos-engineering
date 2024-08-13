@@ -9,7 +9,8 @@ spec:
   selector:
     app: order-app-v2
   ports:
-    - protocol: TCP
+    - name: web
+      protocol: TCP
       port: 8080
       targetPort: 8080
   type: LoadBalancer
@@ -39,7 +40,7 @@ spec:
     spec:
       containers:
         - name: order-app-v2
-          image: lak9348/dapr-order-v2:v0.1.10
+          image: lak9348/dapr-order-v2:v0.1.13
           ports:
             - containerPort: 8080
           imagePullPolicy: Always

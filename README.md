@@ -22,11 +22,22 @@
 minikube start --memory 8192 --cpus 4 
 
 ## init dapr in k8s
-kubectl create namespace common
-dapr init --kubernetes --wait -n common
+dapr init --kubernetes --wait -n default
 
 ## install rabbitmq operator for pubsub
-helm install rb bitnami/rabbitmq-cluster-operator -n common 
+helm install rb bitnami/rabbitmq-cluster-operator -n default
+
+## install prometheus using helm
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install dapr-prom prometheus-community/prometheus --values ./common/prometheus-values.yaml -n default
+
+## install Grafana
+helm repo add grafana https://grafana.github.io/helm-charts
+kubectl --namespace default create secret generic grafana-password \
+   --from-literal=admin-user=admin --from-literal=admin-password=admin
+helm install grafana grafana/grafana --namespace default \
+  --set admin.existingSecret=grafana-password
+
 ```
 
 ### LitmusChaos
@@ -81,6 +92,9 @@ kubectl apply -f ./v2/deploy/order.yaml
 - [Dapr - hello-kubernetes](https://github.com/dapr/quickstarts/tree/master/tutorials/hello-kubernetes)
 - [Dapr - how to use outbox](https://docs.dapr.io/developing-applications/building-blocks/state-management/howto-outbox/)
 - [Dapr - rabbitmq](https://docs.dapr.io/reference/components-reference/supported-pubsub/setup-rabbitmq/)
+- [Dapr - Prometheus Setup](https://docs.dapr.io/operations/observability/metrics/prometheus/)
 - [RabbitMQ's persistence](https://www.rabbitmq.com/kubernetes/operator/using-operator#persistence)
 - [RabbitMQ HA mode](https://www.infracloud.io/blogs/setup-rabbitmq-ha-mode-kubernetes-operator/)
 - [MongoDB cli auth](https://medium.com/@yasiru.13/mongodb-setting-up-an-admin-and-login-as-admin-856ea6856faf)
+- [RabbitMQ Prometheus Setup](https://www.rabbitmq.com/kubernetes/operator/operator-monitoring)
+- [RabbitMQ Dashboard](https://grafana.com/grafana/dashboards/10991-rabbitmq-overview/)

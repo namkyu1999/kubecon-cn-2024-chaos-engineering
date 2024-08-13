@@ -9,7 +9,8 @@ spec:
   selector:
     app: delivery-app-v2
   ports:
-    - protocol: TCP
+    - name: web
+      protocol: TCP
       port: 6005
       targetPort: 6005
   type: LoadBalancer

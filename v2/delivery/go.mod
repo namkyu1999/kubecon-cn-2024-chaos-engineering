@@ -2,7 +2,11 @@ module delivery
 
 go 1.22.3
 
-require github.com/dapr/go-sdk v1.10.1
+require (
+	github.com/dapr/go-sdk v1.10.1
+	github.com/sirupsen/logrus v1.9.3
+	go.mongodb.org/mongo-driver v1.16.0
+)
 
 require (
 	github.com/dapr/dapr v1.13.0 // indirect
@@ -13,13 +17,12 @@ require (
 	github.com/klauspost/compress v1.17.7 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/montanaflynn/stats v0.7.1 // indirect
-	github.com/sirupsen/logrus v1.9.3 // indirect
+	github.com/rogpeppe/go-internal v1.10.0 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
-	go.mongodb.org/mongo-driver v1.16.0 // indirect
 	go.opentelemetry.io/otel v1.23.1 // indirect
 	go.opentelemetry.io/otel/trace v1.23.1 // indirect
 	golang.org/x/crypto v0.25.0 // indirect
