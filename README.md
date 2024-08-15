@@ -5,6 +5,17 @@
 - Recording: TBD
 - Slide: TBD
 
+## Tooling used
+- [LitmusChaos](https://litmuschaos.io/)
+- [Dapr](https://dapr.io/)
+- [Prometheus](https://prometheus.io/)
+- [Grafana](https://grafana.com/)
+- [RabbitMQ](https://www.rabbitmq.com/)
+- [MongoDB](https://www.mongodb.com/)
+- [Redis](https://redis.io/)
+- [k6](https://k6.io/)
+- [Kubernetes](https://kubernetes.io/)
+
 ## Architecture
 
 ### V1
