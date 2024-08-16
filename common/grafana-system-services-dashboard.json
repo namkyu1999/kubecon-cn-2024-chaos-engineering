@@ -1340,7 +1340,7 @@
   "refresh": "5s",
   "schemaVersion": 26,
   "style": "dark",
-  "tags": [],
+  "tags": ["dapr"],
   "templating": {
     "list": []
   },

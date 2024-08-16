@@ -51,9 +51,7 @@ helm install dapr-prom prometheus-community/prometheus --values ./common/prometh
 helm repo add grafana https://grafana.github.io/helm-charts
 kubectl --namespace default create secret generic grafana-password \
    --from-literal=admin-user=admin --from-literal=admin-password=admin
-helm install grafana grafana/grafana --namespace default \
-  --set admin.existingSecret=grafana-password
-
+helm install grafana grafana/grafana --values ./common/grafana-values.yaml --namespace default
 ```
 
 ### LitmusChaos
@@ -102,6 +100,15 @@ kubectl apply -f ./v2/deploy/pubsub.yaml
 ## install applications
 kubectl apply -f ./v2/deploy/delivery.yaml
 kubectl apply -f ./v2/deploy/order.yaml
+```
+
+### backstage
+
+```shell
+cd backstage
+# litmus setup: https://github.com/litmuschaos/backstage-plugin
+# grafana setup: https://github.com/K-Phoen/backstage-plugin-grafana/blob/main/docs/setup.md
+yarn dev
 ```
 
 # Reference

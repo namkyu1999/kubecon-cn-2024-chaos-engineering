@@ -1,0 +1,8 @@
+admin:
+  existingSecret: grafana-password
+grafana.ini:
+  security:
+    allow_embedding: true
+    cookie_same_site: none
+  auth.anonymous:
+    enabled: true

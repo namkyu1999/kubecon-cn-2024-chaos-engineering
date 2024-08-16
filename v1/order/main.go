@@ -18,7 +18,7 @@ const MongoDBDatabase = "delivery"
 const MongoDBCollection = "delivery1"
 const DBUser = "root"
 const DBPassword = "1234"
-const PubSubName = "pubsub"
+const PubSubName = "pubsub1"
 const TopicName = "orders1"
 
 type Delivery struct {
