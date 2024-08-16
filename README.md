@@ -3,7 +3,7 @@
 ## Introduction
 - Session Info: [What if Your System Experiences an Outage? Let's Build a Resilient Systems with Chaos Engineering](https://sched.co/1eYaZ)
 - Recording: TBD
-- Slide: TBD
+- Slide: [Here](./resources/kubecon_china_What_if_Your_System_Experiences_an_Outage_v1.pdf)
 
 ## Tooling used
 - [LitmusChaos](https://litmuschaos.io/)
