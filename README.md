@@ -85,6 +85,8 @@ kubectl create secret generic k6-script-v2 \
 # - name: v2-assert-isDelivered-true
 ## - type: cmdProbe
 ## - conf: command(curl -s "http://delivery-app-v2.v2.svc.cluster.local:6005/result"), criteria(int, is 0)
+
+# you can create chaos experiments directly using manifest files in the litmus/manifest directory
 ```
 
 ### V1
