@@ -1,0 +1,462 @@
+kind: Workflow
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: v1-chaos-exp
+  namespace: litmus
+  creationTimestamp: null
+  labels:
+    infra_id: e9fe0434-6c0f-4c9e-97f1-9c74f3fb62d6
+    revision_id: c87da3ad-7e55-4363-9616-0d40f0274867
+    workflow_id: e36d05b1-121b-4f3d-a42f-d2d4c8d1bc3a
+    workflows.argoproj.io/controller-instanceid: e9fe0434-6c0f-4c9e-97f1-9c74f3fb62d6
+spec:
+  templates:
+    - name: v1-chaos-exp
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      steps:
+        - - name: install-chaos-faults
+            template: install-chaos-faults
+            arguments: {}
+        - - name: k6-loadgen-d7u
+            template: k6-loadgen-d7u
+            arguments: {}
+          - name: pod-delete-3pg
+            template: pod-delete-3pg
+            arguments: {}
+        - - name: cleanup-chaos-resources
+            template: cleanup-chaos-resources
+            arguments: {}
+    - name: install-chaos-faults
+      inputs:
+        artifacts:
+          - name: k6-loadgen-d7u
+            path: /tmp/k6-loadgen-d7u.yaml
+            raw:
+              data: >
+                apiVersion: litmuschaos.io/v1alpha1
+
+                description:
+                  message: |
+                    Execute the k6 engine using the JS script
+                kind: ChaosExperiment
+
+                metadata:
+                  name: k6-loadgen
+                  labels:
+                    name: k6-loadgen
+                    app.kubernetes.io/part-of: litmus
+                    app.kubernetes.io/component: chaosexperiment
+                    app.kubernetes.io/version: ci
+                spec:
+                  definition:
+                    scope: Namespaced
+                    permissions:
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - pods
+                        verbs:
+                          - create
+                          - delete
+                          - get
+                          - list
+                          - patch
+                          - update
+                          - deletecollection
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - events
+                        verbs:
+                          - create
+                          - get
+                          - list
+                          - patch
+                          - update
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - secrets
+                          - configmaps
+                        verbs:
+                          - get
+                          - list
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - pods/log
+                        verbs:
+                          - get
+                          - list
+                          - watch
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - pods/exec
+                        verbs:
+                          - get
+                          - list
+                          - create
+                      - apiGroups:
+                          - batch
+                        resources:
+                          - jobs
+                        verbs:
+                          - create
+                          - list
+                          - get
+                          - delete
+                          - deletecollection
+                      - apiGroups:
+                          - litmuschaos.io
+                        resources:
+                          - chaosengines
+                          - chaosexperiments
+                          - chaosresults
+                        verbs:
+                          - create
+                          - list
+                          - get
+                          - patch
+                          - update
+                          - delete
+                    image: litmuschaos.docker.scarf.sh/litmuschaos/go-runner:latest
+                    imagePullPolicy: Always
+                    args:
+                      - -c
+                      - ./experiments -name k6-loadgen
+                    command:
+                      - /bin/bash
+                    env:
+                      - name: TOTAL_CHAOS_DURATION
+                        value: "30"
+                      - name: CHAOS_INTERVAL
+                        value: "30"
+                      - name: RAMP_TIME
+                        value: "0"
+                      - name: SCRIPT_SECRET_NAME
+                        value: k6-script
+                      - name: SCRIPT_SECRET_KEY
+                        value: script.js
+                      - name: LIB_IMAGE
+                        value: ghcr.io/grafana/k6-operator:latest-runner
+                      - name: LIB_IMAGE_PULL_POLICY
+                        value: Always
+                    labels:
+                      name: k6-loadgen
+                      app.kubernetes.io/part-of: litmus
+                      app.kubernetes.io/component: experiment-job
+                      app.kubernetes.io/version: ci
+          - name: pod-delete-3pg
+            path: /tmp/pod-delete-3pg.yaml
+            raw:
+              data: >
+                apiVersion: litmuschaos.io/v1alpha1
+
+                description:
+                  message: |
+                    Deletes a pod belonging to a deployment/statefulset/daemonset
+                kind: ChaosExperiment
+
+                metadata:
+                  name: pod-delete
+                  labels:
+                    name: pod-delete
+                    app.kubernetes.io/part-of: litmus
+                    app.kubernetes.io/component: chaosexperiment
+                    app.kubernetes.io/version: ci
+                spec:
+                  definition:
+                    scope: Namespaced
+                    permissions:
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - pods
+                        verbs:
+                          - create
+                          - delete
+                          - get
+                          - list
+                          - patch
+                          - update
+                          - deletecollection
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - events
+                        verbs:
+                          - create
+                          - get
+                          - list
+                          - patch
+                          - update
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - configmaps
+                        verbs:
+                          - get
+                          - list
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - pods/log
+                        verbs:
+                          - get
+                          - list
+                          - watch
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - pods/exec
+                        verbs:
+                          - get
+                          - list
+                          - create
+                      - apiGroups:
+                          - apps
+                        resources:
+                          - deployments
+                          - statefulsets
+                          - replicasets
+                          - daemonsets
+                        verbs:
+                          - list
+                          - get
+                      - apiGroups:
+                          - apps.openshift.io
+                        resources:
+                          - deploymentconfigs
+                        verbs:
+                          - list
+                          - get
+                      - apiGroups:
+                          - ""
+                        resources:
+                          - replicationcontrollers
+                        verbs:
+                          - get
+                          - list
+                      - apiGroups:
+                          - argoproj.io
+                        resources:
+                          - rollouts
+                        verbs:
+                          - list
+                          - get
+                      - apiGroups:
+                          - batch
+                        resources:
+                          - jobs
+                        verbs:
+                          - create
+                          - list
+                          - get
+                          - delete
+                          - deletecollection
+                      - apiGroups:
+                          - litmuschaos.io
+                        resources:
+                          - chaosengines
+                          - chaosexperiments
+                          - chaosresults
+                        verbs:
+                          - create
+                          - list
+                          - get
+                          - patch
+                          - update
+                          - delete
+                    image: litmuschaos.docker.scarf.sh/litmuschaos/go-runner:latest
+                    imagePullPolicy: Always
+                    args:
+                      - -c
+                      - ./experiments -name pod-delete
+                    command:
+                      - /bin/bash
+                    env:
+                      - name: TOTAL_CHAOS_DURATION
+                        value: "15"
+                      - name: RAMP_TIME
+                        value: ""
+                      - name: FORCE
+                        value: "true"
+                      - name: CHAOS_INTERVAL
+                        value: "5"
+                      - name: PODS_AFFECTED_PERC
+                        value: ""
+                      - name: TARGET_CONTAINER
+                        value: ""
+                      - name: TARGET_PODS
+                        value: ""
+                      - name: DEFAULT_HEALTH_CHECK
+                        value: "false"
+                      - name: NODE_LABEL
+                        value: ""
+                      - name: SEQUENCE
+                        value: parallel
+                    labels:
+                      name: pod-delete
+                      app.kubernetes.io/part-of: litmus
+                      app.kubernetes.io/component: experiment-job
+                      app.kubernetes.io/version: ci
+      outputs: {}
+      metadata: {}
+      container:
+        name: ""
+        image: litmuschaos/k8s:2.11.0
+        command:
+          - sh
+          - -c
+        args:
+          - kubectl apply -f /tmp/ -n {{workflow.parameters.adminModeNamespace}}
+            && faultCount=$(ls /tmp/ | grep -E "(.yaml$|.yml$)" | wc -l) &&
+            until [[ $(kubectl get -f /tmp/ --no-headers | wc -l) -eq
+            $faultCount ]]; do sleep 1; echo "Waiting for ChaosExperiment CR
+            Ready..." ; done; echo "ChaosExperiment CR Ready"
+        resources: {}
+    - name: cleanup-chaos-resources
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ""
+        image: litmuschaos/k8s:2.11.0
+        command:
+          - sh
+          - -c
+        args:
+          - kubectl delete chaosengine -l workflow_run_id={{workflow.uid}} -n
+            {{workflow.parameters.adminModeNamespace}}
+        resources: {}
+    - name: k6-loadgen-d7u
+      inputs:
+        artifacts:
+          - name: k6-loadgen-d7u
+            path: /tmp/chaosengine-k6-loadgen-d7u.yaml
+            raw:
+              data: >
+                apiVersion: litmuschaos.io/v1alpha1
+
+                kind: ChaosEngine
+
+                metadata:
+                  namespace: "{{workflow.parameters.adminModeNamespace}}"
+                  labels:
+                    workflow_run_id: "{{ workflow.uid }}"
+                    workflow_name: v1-chaos-exp
+                  annotations:
+                    probeRef: '[{"name":"v1-assert-isDelivered-true","mode":"EOT"}]'
+                  generateName: k6-loadgen-d7u
+                spec:
+                  engineState: active
+                  chaosServiceAccount: litmus-admin
+                  experiments:
+                    - name: k6-loadgen
+                      spec:
+                        components:
+                          env:
+                            - name: TOTAL_CHAOS_DURATION
+                              value: "80"
+                            - name: CHAOS_INTERVAL
+                              value: "0"
+                            - name: RAMP_TIME
+                              value: "10"
+                            - name: SCRIPT_SECRET_NAME
+                              value: k6-script-v1
+                            - name: SCRIPT_SECRET_KEY
+                              value: script-v1.js
+                            - name: LIB_IMAGE
+                              value: ghcr.io/grafana/k6-operator:latest-runner
+                            - name: LIB_IMAGE_PULL_POLICY
+                              value: Always
+      outputs: {}
+      metadata:
+        labels:
+          weight: "10"
+      container:
+        name: ""
+        image: docker.io/litmuschaos/litmus-checker:2.11.0
+        args:
+          - -file=/tmp/chaosengine-k6-loadgen-d7u.yaml
+          - -saveName=/tmp/engine-name
+        resources: {}
+    - name: pod-delete-3pg
+      inputs:
+        artifacts:
+          - name: pod-delete-3pg
+            path: /tmp/chaosengine-pod-delete-3pg.yaml
+            raw:
+              data: >
+                apiVersion: litmuschaos.io/v1alpha1
+
+                kind: ChaosEngine
+
+                metadata:
+                  namespace: "{{workflow.parameters.adminModeNamespace}}"
+                  labels:
+                    workflow_run_id: "{{ workflow.uid }}"
+                    workflow_name: v1-chaos-exp
+                  annotations:
+                    probeRef: '[{"name":"v1-assert-rabbitmq-is-running","mode":"EOT"}]'
+                  generateName: pod-delete-3pg
+                spec:
+                  appinfo:
+                    appns: v1
+                    applabel: app.kubernetes.io/name=pubsub
+                    appkind: statefulset
+                  engineState: active
+                  chaosServiceAccount: litmus-admin
+                  experiments:
+                    - name: pod-delete
+                      spec:
+                        components:
+                          env:
+                            - name: TOTAL_CHAOS_DURATION
+                              value: "15"
+                            - name: RAMP_TIME
+                              value: "15"
+                            - name: FORCE
+                              value: "true"
+                            - name: CHAOS_INTERVAL
+                              value: "5"
+                            - name: PODS_AFFECTED_PERC
+                              value: ""
+                            - name: TARGET_CONTAINER
+                              value: ""
+                            - name: TARGET_PODS
+                              value: ""
+                            - name: DEFAULT_HEALTH_CHECK
+                              value: "false"
+                            - name: NODE_LABEL
+                              value: ""
+                            - name: SEQUENCE
+                              value: parallel
+      outputs: {}
+      metadata:
+        labels:
+          weight: "10"
+      container:
+        name: ""
+        image: docker.io/litmuschaos/litmus-checker:2.11.0
+        args:
+          - -file=/tmp/chaosengine-pod-delete-3pg.yaml
+          - -saveName=/tmp/engine-name
+        resources: {}
+  entrypoint: v1-chaos-exp
+  arguments:
+    parameters:
+      - name: adminModeNamespace
+        value: litmus
+  serviceAccountName: argo-chaos
+  podGC:
+    strategy: OnWorkflowCompletion
+  securityContext:
+    runAsUser: 1000
+    runAsNonRoot: true
+status:
+  startedAt: null
+  finishedAt: null

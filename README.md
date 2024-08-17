@@ -69,6 +69,22 @@ kubectl create secret generic k6-script-v1 \
     
 kubectl create secret generic k6-script-v2 \
     --from-file=./litmus/script-v2.js -n litmus
+    
+# Probe for v1
+# - name: v1-assert-rabbitmq-is-running
+## - type: httpProbe
+## - conf: url(http://pubsub.v1.svc.cluster.local:15672), method(GET), criteria(statusCode == 200)
+# - name: v1-assert-isDelivered-true
+## - type: cmdProbe
+## - conf: command(curl -s "http://delivery-app-v1.v1.svc.cluster.local:6005/result"), criteria(int, is 0)
+
+# Probe for v2
+# - name: v2-assert-rabbitmq-is-running
+## - type: httpProbe
+## - conf: url(http://pubsub.v2.svc.cluster.local:15672), method(GET), criteria(statusCode == 200)
+# - name: v2-assert-isDelivered-true
+## - type: cmdProbe
+## - conf: command(curl -s "http://delivery-app-v2.v2.svc.cluster.local:6005/result"), criteria(int, is 0)
 ```
 
 ### V1

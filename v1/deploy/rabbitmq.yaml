@@ -29,7 +29,7 @@ spec:
     storage: 1Gi
   service:
     type: NodePort
-  replicas: 3
+  replicas: 1
   secretBackend:
     externalSecret:
       name: "my-secret"

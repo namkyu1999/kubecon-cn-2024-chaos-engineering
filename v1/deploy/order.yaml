@@ -39,7 +39,7 @@ spec:
     spec:
       containers:
         - name: order-app-v1
-          image: lak9348/dapr-order-v1:v0.2.0
+          image: lak9348/dapr-order-v1:v0.2.1
           ports:
             - containerPort: 8080
           imagePullPolicy: Always
