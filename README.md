@@ -2,7 +2,7 @@
 
 ## Introduction
 - Session Info: [Here](https://sched.co/1eYaZ)
-- Recording: TBD
+- Recording: [Here](https://youtu.be/3mjGEh905u4?feature=shared)
 - Slide: [Here](./resources/kubecon_china_What_if_Your_System_Experiences_an_Outage_v1.pdf)
 
 ## Tooling used
